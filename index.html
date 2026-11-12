@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hub de Evolução</title>
+<meta name="description" content="Treino, corrida, dieta e corpo: acompanhe a sua evolução e compita com os amigos.">
+<meta name="theme-color" content="#edf0ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1110" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Evolução">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=Schibsted+Grotesk:wght@600;700;800&display=swap">
+<style>
+:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+img { max-width: 100%; }
+[hidden]:not([hidden=until-found i]) { display: none !important; }
+
+:root {
+  /* Mesmo sistema visual do Hub de Vendas: cabeçalho, abas fixas, painéis em grade que viram uma coluna no celular. */
+  --bg: #edf0ed;
+  --surface: #fbfcfb;
+  --surface-2: #f2f4f1;
+  --ink: #131816;
+  --ink-2: #48504c;
+  --muted: #6f7772;
+  --line: #dbe0db;
+  --line-2: #c3c9c3;
+  --accent: #1d5fc4;
+  --accent-soft: #e4ecf9;
+  --c-tag: #2a78d6;
+  --c-ace: #eb6834;
+  --c-lucro: #1baf7a;
+  --c-neutro: #aab0aa;
+  --seg-tag: #2a78d6;
+  --seg-ace: #eb6834;
+  --seg-ded: #aab0aa;
+  --seg-lucro: #1baf7a;
+  --paper: #fffef9;
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --good-soft: #e3f4e3;
+  --warn: #fab219;
+  --warn-ink: #7d5200;
+  --warn-soft: #fdf1d6;
+  --bad: #d03b3b;
+  --bad-ink: #a82828;
+  --bad-soft: #f8e2e2;
+  --on-status: #ffffff;
+  --shadow: 0 1px 2px rgba(19, 24, 22, .06), 0 10px 28px rgba(19, 24, 22, .07);
+  --font-display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1110; --surface: #161a18; --surface-2: #1d2220; --ink: #edf0ed; --ink-2: #b6beb9;
+    --muted: #8b938e; --line: #29302c; --line-2: #3b433f; --accent: #5c9cf0; --accent-soft: #1a2940;
+    --c-tag: #3987e5; --c-ace: #d95926; --c-lucro: #199e70; --c-neutro: #5a615c; --seg-tag: #3987e5; --seg-ace: #d95926; --seg-ded: #5a615c; --seg-lucro: #199e70; --paper: #1a1f1c;
+    --good-ink: #46c946; --good-soft: #13291a; --warn-ink: #f5b52e; --warn-soft: #2d2410; --bad-ink: #f07a7a; --bad-soft: #321818;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1110; --surface: #161a18; --surface-2: #1d2220; --ink: #edf0ed; --ink-2: #b6beb9;
+  --muted: #8b938e; --line: #29302c; --line-2: #3b433f; --accent: #5c9cf0; --accent-soft: #1a2940;
+  --c-tag: #3987e5; --c-ace: #d95926; --c-lucro: #199e70; --c-neutro: #5a615c; --seg-tag: #3987e5; --seg-ace: #d95926; --seg-ded: #5a615c; --seg-lucro: #199e70; --paper: #1a1f1c;
+  --good-ink: #46c946; --good-soft: #13291a; --warn-ink: #f5b52e; --warn-soft: #2d2410; --bad-ink: #f07a7a; --bad-soft: #321818;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1240px; margin: 0 auto; }
+
+header.top { padding-block: 24px 10px; }
+.top .inner { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 24px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 4px; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 4.2vw, 42px); letter-spacing: -0.025em; line-height: 1; margin: 0; }
+.save { font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.save::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); }
+.save[data-s="saved"]::before { background: var(--good); }
+.save[data-s="pending"]::before { background: var(--warn); }
+.save[data-s="error"]::before, .save[data-s="readonly"]::before { background: var(--bad); }
+
+nav.tabs-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--bg); padding-block: 8px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a {
+  flex: none; text-decoration: none; color: var(--ink-2); font-weight: 700; font-size: 14.5px;
+  padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap;
+}
+.tabs a:hover { color: var(--ink); background: var(--surface-2); }
+.tabs a[aria-current="page"] { background: var(--ink); color: var(--surface); }
+.tabs a .cnt { font: 600 11.5px var(--font-mono); margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--warn); color: #3a2a00; }
+
+main { padding-block: 20px 64px; }
+.page { display: grid; gap: 18px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.grid2.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 940px) { .grid2, .grid2.even { grid-template-columns: minmax(0, 1fr); } }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 20px; min-width: 0; }
+.panel h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.sub { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; }
+.panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 10px 16px; margin-bottom: 14px; }
+.panel-head > div:first-child { min-width: 0; }
+.label { font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+
+/* KPIs */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 940px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 4px; min-width: 0; }
+.kpi .v { font: 600 24px var(--font-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.kpi .d { font-size: 13px; color: var(--muted); }
+.kpi .v.good { color: var(--good-ink); }
+.kpi .v.bad { color: var(--bad-ink); }
+.progress { height: 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; margin-top: 4px; }
+.progress > i { display: block; height: 100%; background: var(--c-lucro); border-radius: 999px; }
+
+/* chips */
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good-ink); border-color: transparent; }
+.chip.warn { background: var(--warn-soft); color: var(--warn-ink); border-color: transparent; }
+.chip.bad { background: var(--bad-soft); color: var(--bad-ink); border-color: transparent; }
+.chip.info { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+/* charts */
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .ax { fill: var(--muted); font: 11px var(--font-mono); }
+.chart .axl { fill: var(--ink-2); font: 700 11px var(--font-body); }
+.chart .ref { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 4 4; }
+.chart .area { fill: var(--c-lucro); opacity: .12; }
+.chart .l-lucro { fill: none; stroke: var(--c-lucro); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart .l-rec { fill: none; stroke: var(--c-tag); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chart .dot-l { fill: var(--c-lucro); stroke: var(--surface); stroke-width: 2; }
+.chart .dot-r { fill: var(--c-tag); stroke: var(--surface); stroke-width: 2; }
+.chart .bar { fill: var(--c-tag); }
+.chart .bar.l { fill: var(--c-lucro); }
+.chart .val { fill: var(--ink); font: 600 11px var(--font-mono); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-2); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.sq { width: 10px; height: 10px; }
+.legend i.dash { background: none; border-top: 2px dashed var(--ink-2); height: 0; }
+.hbars { display: grid; gap: 10px; }
+.hb { display: grid; gap: 4px; }
+.hb-top { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.hb-top b { min-width: 0; overflow-wrap: anywhere; }
+.hb-top span { font: 500 13px var(--font-mono); color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hb-track { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.hb-track i { display: block; height: 100%; border-radius: 999px; background: var(--c-tag); }
+
+.empty { border: 1.5px dashed var(--line-2); border-radius: 12px; padding: 18px; color: var(--ink-2); display: grid; gap: 6px; }
+.empty strong { color: var(--ink); font-size: 15px; }
+
+/* forms */
+.form { display: grid; gap: 12px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field > span { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.field small { color: var(--muted); font-size: 12px; }
+input[type="text"], input[type="date"], input[type="number"], input:not([type]), select, textarea {
+  width: 100%; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface); color: var(--ink);
+  padding: 8px 10px; font-size: 14.5px; min-width: 0;
+}
+input.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+textarea { min-height: 84px; resize: vertical; line-height: 1.45; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+input.invalid { border-color: var(--bad); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { font-size: 14px; border-radius: 8px; padding: 8px 13px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); cursor: pointer; font-weight: 700; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.btn.primary:hover { opacity: .9; }
+.btn.small { font-size: 13px; padding: 4px 10px; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--ink); background: var(--surface-2); }
+.btn.danger { color: var(--bad-ink); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; color: var(--ink-2); font-size: 13.5px; padding: 5px 12px; border-radius: 999px; cursor: pointer; font-weight: 700; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.note { font-size: 13.5px; color: var(--ink-2); background: var(--surface-2); border-radius: 8px; padding: 8px 11px; margin: 0; }
+.note.warn { background: var(--warn-soft); color: var(--warn-ink); }
+.ex-nums-wrap { display: grid; gap: 4px; justify-items: end; }
+.ex-more { font-size: 12px !important; padding: 2px 6px !important; }
+.ex-sets { display: grid; gap: 6px; justify-items: end; }
+.set { align-items: end; }
+.set .sn { font: 500 12px var(--font-mono); color: var(--muted); padding-bottom: 8px; min-width: 22px; text-align: right; }
+.rest { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.rest-pill { position: fixed; z-index: 29; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 68px); display: flex; gap: 8px; align-items: center; background: var(--ink); color: var(--surface); padding: 8px 10px 8px 16px; border-radius: 999px; box-shadow: var(--shadow); white-space: nowrap; }
+.rest-pill[hidden] { display: none; }
+.rest-pill b { font: 600 20px var(--font-mono); font-variant-numeric: tabular-nums; min-width: 52px; }
+.rest-pill span { font-size: 12.5px; opacity: .8; }
+.rest-pill button { border: 1px solid color-mix(in srgb, var(--surface) 40%, transparent); background: transparent; color: inherit; border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 700; cursor: pointer; }
+#gm-body { display: grid; gap: 10px; min-width: 0; }
+#gm-body textarea { width: 100%; min-height: 90px; font: 12px var(--font-mono); }
+.note.edit { background: var(--info-soft, var(--surface-2)); color: var(--ink); border: 1px solid var(--line); }
+.modal { position: fixed; inset: 0; z-index: 40; background: rgba(10, 14, 12, .5); display: flex; align-items: center; justify-content: center; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.modal[hidden] { display: none; }
+.modal-card { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); width: 100%; max-width: 460px; max-height: calc(100dvh - 48px); overflow: auto; padding: 20px 18px 18px; display: grid; gap: 12px; }
+.modal-card h2 { font-family: var(--font-display); font-weight: 700; font-size: 21px; margin: 0; }
+.modal-card .sub { margin: -6px 0 0; }
+.modal-card ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 14.5px; }
+.modal-card .btn-row { margin-top: 4px; }
+.modal-card .btn { flex: 1 1 140px; text-align: center; padding-block: 11px; }
+@media (max-width: 600px) { .modal { align-items: flex-end; } }
+.calc-preview { display: flex; flex-wrap: wrap; gap: 8px 18px; font: 500 14px var(--font-mono); font-variant-numeric: tabular-nums; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; }
+.calc-preview b { font-weight: 600; }
+
+/* tables / lists */
+.table-wrap { overflow-x: auto; margin-inline: -4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 8px 6px; border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+th.n, td.n { text-align: right; }
+td { padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+td.n, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.acts { text-align: right; white-space: nowrap; }
+td .muted, .muted { color: var(--muted); font-size: 12.5px; }
+table.min-wide { min-width: 680px; }
+
+.list { display: grid; gap: 2px; }
+.task { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 8px 4px; border-bottom: 1px solid var(--line); }
+.task input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--c-lucro); }
+.task .t { min-width: 0; overflow-wrap: anywhere; }
+.task.done .t { color: var(--muted); text-decoration: line-through; }
+.task .meta { font-size: 12px; color: var(--muted); }
+.task .meta.late { color: var(--bad-ink); font-weight: 700; }
+
+.qty { display: inline-flex; align-items: center; gap: 4px; }
+.qty button { width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--line-2); background: var(--surface); cursor: pointer; font-weight: 700; }
+.qty output { min-width: 28px; text-align: center; font: 600 15px var(--font-mono); }
+
+/* diário */
+.cal-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cal-head h2 { text-align: center; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal .dow { text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; padding: 4px 0; }
+.day {
+  position: relative; aspect-ratio: 1 / 1; max-width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+  cursor: pointer; display: grid; align-content: space-between; padding: 6px; text-align: left; min-width: 0;
+}
+.day:hover { border-color: var(--line-2); background: var(--surface-2); }
+.day.out { visibility: hidden; }
+.day .n { font: 600 13px var(--font-mono); }
+.day.today .n { color: var(--accent); }
+.day[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.day .marks { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+.day .m { width: 8px; height: 8px; border-radius: 50%; background: var(--c-neutro); }
+.day .m.bom { background: var(--good); }
+.day .m.ok { background: var(--warn); }
+.day .m.ruim { background: var(--bad); }
+@media (max-width: 520px) { .day { padding: 4px; border-radius: 8px; } .day .n { font-size: 12px; } }
+
+
+.toast { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); background: var(--ink); color: var(--surface); padding: 9px 14px; border-radius: 10px; font-size: 14px; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+
+
+/* ---------- Hub de Evolução: cores de cada área ---------- */
+:root {
+  --c-gym: #2a78d6; --c-run: #eb6834; --c-food: #1baf7a; --c-body: #7a5bd1;
+  --c-prot: #7a5bd1; --c-carb: #d99a00; --c-gord: #eb6834; --c-agua: #2aa3c9;
+  --g-braco: #2a78d6; --g-peito: #d03b3b; --g-perna: #1baf7a; --g-costas: #eb6834; --g-ombro: #7a5bd1; --g-ext: #2aa3c9; --g-outro: #aab0aa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-gym: #3987e5; --c-run: #e0703f; --c-food: #22b582; --c-body: #9a80e8;
+    --c-prot: #9a80e8; --c-carb: #e8ad1f; --c-gord: #e0703f; --c-agua: #3bb6dc;
+    --g-braco: #3987e5; --g-peito: #e05555; --g-perna: #22b582; --g-costas: #e0703f; --g-ombro: #9a80e8; --g-ext: #3bb6dc; --g-outro: #6c736e;
+  }
+}
+:root[data-theme="dark"] {
+  --c-gym: #3987e5; --c-run: #e0703f; --c-food: #22b582; --c-body: #9a80e8;
+  --c-prot: #9a80e8; --c-carb: #e8ad1f; --c-gord: #e0703f; --c-agua: #3bb6dc;
+  --g-braco: #3987e5; --g-peito: #e05555; --g-perna: #22b582; --g-costas: #e0703f; --g-ombro: #9a80e8; --g-ext: #3bb6dc; --g-outro: #6c736e;
+}
+
+.kpi .v small { font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+@media (max-width: 940px) { .grid3 { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 18px; min-width: 0; align-content: start; }
+
+/* gráficos */
+.chart .bar.gym { fill: var(--c-gym); }
+.chart .bar.run { fill: var(--c-run); }
+.chart .bar.food { fill: var(--c-food); }
+.chart .bar.prot { fill: var(--c-prot); }
+.chart .bar.dim { opacity: .35; }
+.chart .ln { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart .ln.body { stroke: var(--c-body); }
+.chart .ln.run { stroke: var(--c-run); }
+.chart .ar.body { fill: var(--c-body); opacity: .1; }
+.chart .ar.run { fill: var(--c-run); opacity: .1; }
+.chart .pt { stroke: var(--surface); stroke-width: 2; }
+.chart .pt.body { fill: var(--c-body); }
+.chart .pt.run { fill: var(--c-run); }
+.chart .hit { fill: transparent; }
+.chart .axl, .chart .val { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+
+/* barras de meta */
+.meter { display: grid; gap: 5px; }
+.meter-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; }
+.meter-top b { min-width: 0; overflow-wrap: anywhere; }
+.meter-top span { font: 500 13px var(--font-mono); color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.meter .progress { margin-top: 0; height: 10px; }
+.meter .foot { font-size: 12.5px; color: var(--muted); }
+.meters { display: grid; gap: 14px; }
+.split { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: var(--surface-2); gap: 2px; }
+.split i { display: block; height: 100%; }
+
+/* hoje */
+.today-list { display: grid; gap: 2px; }
+.ti { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 2px; border-bottom: 1px solid var(--line); }
+.ti:last-child { border-bottom: 0; }
+.ti .ic { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
+.ti .ic.ok { background: var(--good); color: var(--on-status); border-color: transparent; }
+.ti .t { min-width: 0; display: grid; gap: 2px; }
+.ti .t b { font-size: 14.5px; }
+.ti .t span { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.ti .r { font: 500 13px var(--font-mono); color: var(--ink-2); white-space: nowrap; text-align: right; }
+
+/* grupos */
+.gdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.chip .gdot { width: 8px; height: 8px; }
+
+/* registrar treino */
+.ex-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.ex { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; align-items: center; padding: 10px 2px; border-bottom: 1px solid var(--line); }
+.ex.on { background: color-mix(in srgb, var(--good-soft) 55%, transparent); }
+.ex-check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: start; cursor: pointer; min-width: 0; }
+.ex-check input[type="checkbox"] { width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--good); grid-row: span 2; }
+.ex-check b { font-size: 14.5px; overflow-wrap: anywhere; }
+.ex-check small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.ex-check input.ex-nome { font-weight: 700; padding: 5px 8px; }
+.ex-nums { display: flex; gap: 6px; }
+.ex-nums label { display: grid; gap: 2px; }
+.ex-nums label span { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ex-nums input { width: 62px; padding: 6px 7px; font: 500 14px var(--font-mono); text-align: right; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.ex-nums input.w2 { width: 50px; }
+@media (max-width: 560px) { .ex { grid-template-columns: minmax(0, 1fr); } .ex-nums { padding-left: 30px; } }
+
+/* fichas */
+.ficha { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; padding: 10px 2px; border-bottom: 1px solid var(--line); }
+.ficha .t { min-width: 0; display: grid; gap: 2px; }
+.ficha .t b { font-size: 14.5px; overflow-wrap: anywhere; }
+.ficha .t span { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
+.ficha .side { text-align: right; font: 500 13px var(--font-mono); color: var(--ink-2); white-space: nowrap; display: grid; gap: 2px; justify-items: end; align-content: start; }
+.ficha .side small { font: 12px var(--font-body); color: var(--muted); }
+@media (max-width: 560px) { .ficha { grid-template-columns: minmax(0, 1fr); } .ficha .side { justify-items: start; text-align: left; } }
+.tip { font-size: 13.5px; background: var(--warn-soft); color: var(--warn-ink); border-radius: 8px; padding: 8px 11px; margin: 12px 0 0; }
+
+/* calendário */
+.day .km { font: 600 10px var(--font-mono); background: var(--c-run); color: var(--on-status); border-radius: 999px; padding: 0 4px; line-height: 14px; }
+.day .m { width: 8px; height: 8px; border-radius: 50%; }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; color: var(--ink-2); margin-top: 10px; }
+.cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.sess { display: grid; gap: 4px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; }
+.sess-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sess ul { margin: 2px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); }
+.sess ul li { overflow-wrap: anywhere; }
+.sess .mono { font-size: 13px; }
+
+/* alimentação */
+.day-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.day-nav h2 { flex: 1 1 auto; min-width: 0; }
+.day-nav input[type="date"] { width: auto; }
+.meal { padding: 6px 0 4px; border-bottom: 1px solid var(--line); }
+.meal:last-child { border-bottom: 0; }
+.meal-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 6px 2px; }
+.meal-h b { font-family: var(--font-display); font-size: 15.5px; }
+.meal-h span { font: 500 13px var(--font-mono); color: var(--ink-2); }
+.food { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 8px; align-items: center; padding: 6px 2px 6px 10px; border-left: 3px solid var(--line); margin: 2px 0; }
+.food .t { min-width: 0; display: grid; gap: 1px; }
+.food .t b { font-weight: 400; font-size: 14.5px; overflow-wrap: anywhere; }
+.food .t small { font: 12px var(--font-mono); color: var(--muted); }
+.food .k { font: 600 13.5px var(--font-mono); white-space: nowrap; }
+.agua-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; }
+.freq { display: flex; flex-wrap: wrap; gap: 6px; }
+.freq button { cursor: pointer; }
+.gitems { display: grid; gap: 2px; margin-top: 10px; }
+.gitem { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--line); }
+.gitem input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--good); }
+.gitem .t { min-width: 0; display: grid; gap: 2px; }
+.gitem .t b { font-weight: 700; font-size: 14px; overflow-wrap: anywhere; }
+.gitem .t small { font: 12px var(--font-mono); color: var(--muted); }
+.gitem select { width: auto; font-size: 13px; padding: 4px 6px; }
+@media (max-width: 520px) { .gitem { grid-template-columns: auto minmax(0, 1fr); } .gitem select { grid-column: 2; justify-self: start; } }
+input[type="file"] { font-size: 13.5px; max-width: 100%; }
+
+/* corpo */
+.med-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px; }
+.delta-up { color: var(--ink); }
+.delta-down { color: var(--ink); }
+.best { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 2px; border-bottom: 1px solid var(--line); }
+.best .t { min-width: 0; display: grid; gap: 2px; }
+.best .t b { overflow-wrap: anywhere; }
+.best .t span { font-size: 12.5px; color: var(--muted); }
+.best .v { font: 600 16px var(--font-mono); text-align: right; white-space: nowrap; }
+.best .v small { display: block; font: 12px var(--font-body); color: var(--muted); font-weight: 400; }
+
+/* conexões */
+.cx { display: grid; gap: 12px; }
+.cx-status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cx ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); }
+.cx .msg { font-size: 13.5px; border-radius: 8px; padding: 8px 11px; margin: 0; background: var(--surface-2); color: var(--ink-2); }
+.cx .msg.bad { background: var(--bad-soft); color: var(--bad-ink); }
+.cx .msg.good { background: var(--good-soft); color: var(--good-ink); }
+.counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.counts div { background: var(--surface-2); border-radius: 10px; padding: 8px 10px; display: grid; gap: 2px; }
+.counts b { font: 600 18px var(--font-mono); }
+.counts span { font-size: 12.5px; color: var(--muted); }
+a.link { color: var(--accent); font-weight: 700; text-decoration: none; }
+a.link:hover { text-decoration: underline; }
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -1px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn .spin { margin-right: 6px; }
+.hidden { display: none !important; }
+
+/* ---------- site: login, conta, amigos, ranking, instalar ---------- */
+body.sem-login header.top, body.sem-login nav.tabs-bar, body.sem-login main, body.sem-login #amigo-bar { display: none !important; }
+body:not(.sem-login) #auth { display: none !important; }
+#auth { min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.auth-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px 20px; display: grid; gap: 14px; box-shadow: var(--shadow); }
+.auth-card h1 { font-size: 32px; }
+.auth-card .sub { margin: 0; }
+.auth-card .btn { padding-block: 11px; }
+.auth-card .btn.primary { width: 100%; }
+.auth-logo { width: 56px; height: 56px; border-radius: 14px; display: block; }
+.auth-msg { font-size: 13.5px; border-radius: 8px; padding: 8px 11px; margin: 0; background: var(--bad-soft); color: var(--bad-ink); }
+.auth-msg.ok { background: var(--good-soft); color: var(--good-ink); }
+.auth-alt { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13.5px; }
+.auth-alt button { background: none; border: 0; color: var(--accent); font-weight: 700; cursor: pointer; padding: 4px 0; }
+input[type="email"], input[type="password"] { width: 100%; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface); color: var(--ink); padding: 10px 11px; font-size: 15px; min-width: 0; }
+input[type="email"]:focus, input[type="password"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--good); flex: none; }
+.check small { display: block; color: var(--muted); font-size: 12.5px; }
+.cores { display: flex; flex-wrap: wrap; gap: 8px; }
+.cores button { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line-2); cursor: pointer; }
+.cores button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
+.demo-note { font-size: 13px; background: var(--accent-soft); color: var(--accent); border-radius: 8px; padding: 8px 11px; margin: 0; }
+
+.top-acts { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; justify-content: flex-end; }
+.conta { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 12px 4px 4px; cursor: pointer; font-weight: 700; font-size: 14px; color: var(--ink); }
+.conta:hover { background: var(--surface-2); }
+.av { width: 28px; height: 28px; border-radius: 50%; display: inline-grid; place-items: center; color: #fff; font: 700 13px var(--font-body); flex: none; text-transform: uppercase; }
+.av.lg { width: 36px; height: 36px; font-size: 15px; }
+#btn-instalar { white-space: nowrap; }
+
+#amigo-bar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 53px); z-index: 8; background: var(--accent-soft); color: var(--accent); border-bottom: 1px solid var(--line); padding-block: 8px; }
+#amigo-bar .inner { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; }
+#amigo-bar b { color: var(--ink); }
+body.modo-amigo .so-meu, body.modo-amigo #f-treino, body.modo-amigo #f-run, body.modo-amigo #f-food, body.modo-amigo #g-form,
+body.modo-amigo #f-metas, body.modo-amigo #f-peso, body.modo-amigo #f-med, body.modo-amigo #f-teste, body.modo-amigo #f-perfil,
+body.modo-amigo [data-act="del"], body.modo-amigo [data-act="ed"], body.modo-amigo [data-act="edit-treino"], body.modo-amigo [data-act="notion-send"],
+body.modo-amigo [data-act="agua"], body.modo-amigo .agua-row, body.modo-amigo #freq-box, body.modo-amigo [data-tab="conexoes"], body.modo-amigo [data-tab="ranking"],
+body.modo-amigo #hoje-box .btn, body.modo-amigo #metas-box .btn, body.modo-amigo [data-act="reg-dia"], body.modo-amigo .panel.so-meu { display: none !important; }
+body.modo-amigo .grid2, body.modo-amigo .grid2.even { grid-template-columns: minmax(0, 1fr); }
+.grid2:has(> section[hidden]), .grid2.even:has(> section[hidden]) { grid-template-columns: minmax(0, 1fr); }
+.amigo-oculto { display: none; }
+body.modo-amigo .amigo-oculto { display: block; }
+
+/* ranking */
+.rank-list { display: grid; gap: 4px; }
+.rk { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+.rk:last-child { border-bottom: 0; }
+.rk .pos { font: 700 18px var(--font-display); color: var(--muted); text-align: center; }
+.rk.p1 .pos { color: #c9900a; } .rk.p2 .pos { color: #8a949b; } .rk.p3 .pos { color: #b0693a; }
+.rk .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.rk .who b { overflow-wrap: anywhere; }
+.rk .pts { font: 600 20px var(--font-mono); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rk .pts small { font: 12px var(--font-body); color: var(--muted); display: block; }
+.rk .bar { grid-column: 2 / -1; height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.rk .bar i { display: block; height: 100%; border-radius: 999px; }
+.rk .det { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rk.eu { background: color-mix(in srgb, var(--accent-soft) 60%, transparent); border-radius: 10px; }
+.cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 940px) { .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .cats { grid-template-columns: minmax(0, 1fr); } }
+.cat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; min-width: 0; align-content: start; }
+.cat ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.cat li { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; align-items: center; }
+.cat li span:first-child { display: inline-flex; gap: 7px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+.cat li .mono { font-size: 13px; color: var(--ink-2); }
+.regras { font-size: 13.5px; color: var(--ink-2); }
+.regras summary { cursor: pointer; font-weight: 700; color: var(--ink); }
+.regras ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+.legend .sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.chart .ln-m { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart .pt-m { stroke: var(--surface); stroke-width: 2; }
+.chart .ln-m.eu { stroke-width: 3.5; }
+.offline-chip { display: none; }
+body.offline .offline-chip { display: inline-flex; }
+
+</style>
+</head>
+<body class="sem-login">
+<!-- LOGIN / CADASTRO / ENTRAR NO GRUPO -->
+<div id="auth">
+  <div class="auth-card" id="auth-card" role="region" aria-label="Entrar">
+    <img class="auth-logo" src="icons/icon-192.png" alt="">
+    <div>
+      <p class="eyebrow">Treino, corrida e dieta · com os amigos</p>
+      <h1>Hub de Evolução</h1>
+    </div>
+    <div id="auth-body"><p class="sub">Carregando…</p></div>
+  </div>
+</div>
+
+<header class="top gutter">
+  <div class="inner">
+    <div>
+      <p class="eyebrow" id="eyebrow">Desenvolvimento pessoal · Treino, corrida e dieta</p>
+      <h1>Hub de Evolução</h1>
+    </div>
+    <div class="top-acts">
+      <span class="chip warn offline-chip">Sem internet: salvando no aparelho</span>
+      <span class="save" id="save-status" data-s="idle" role="status">Carregando…</span>
+      <button class="btn small" type="button" id="btn-instalar" hidden>Instalar app</button>
+      <button class="conta" type="button" id="btn-conta" aria-label="Sua conta"><span class="av" id="conta-av">?</span><span id="conta-nome">Conta</span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs-bar gutter" aria-label="Seções">
+  <div class="inner tabs" id="tabs">
+    <a href="#painel" data-tab="painel">Painel</a>
+    <a href="#ranking" data-tab="ranking">Ranking</a>
+    <a href="#treinos" data-tab="treinos">Treinos</a>
+    <a href="#corrida" data-tab="corrida">Corrida</a>
+    <a href="#alimentacao" data-tab="alimentacao">Alimentação</a>
+    <a href="#corpo" data-tab="corpo">Corpo</a>
+    <a href="#conexoes" data-tab="conexoes">Conexões</a>
+  </div>
+</nav>
+
+<div id="amigo-bar" class="gutter" hidden>
+  <div class="inner">
+    <span>Você está vendo o hub de <b id="amigo-nome">—</b> (só leitura).<span id="amigo-oculto-txt"></span></span>
+    <button class="btn small primary" type="button" data-act="amigo-sair">Voltar para o meu</button>
+  </div>
+</div>
+
+<main class="gutter">
+  <div class="inner">
+
+    <!-- RANKING -->
+    <section class="page" id="tab-ranking" aria-label="Ranking" hidden>
+      <section class="panel" aria-labelledby="h-rank">
+        <div class="panel-head">
+          <div><h2 id="h-rank">Competição</h2><p class="sub" id="rank-sub">Pontos de treino, corrida e dieta de cada um.</p></div>
+          <div class="seg" id="rank-seg" role="group" aria-label="Período">
+            <button type="button" data-p="semana" aria-pressed="true">Semana</button>
+            <button type="button" data-p="mes" aria-pressed="false">Mês</button>
+            <button type="button" data-p="30d" aria-pressed="false">30 dias</button>
+            <button type="button" data-p="ano" aria-pressed="false">Ano</button>
+          </div>
+        </div>
+        <div id="rank-box"></div>
+        <details class="regras" style="margin-top:14px">
+          <summary>Como os pontos são contados</summary>
+          <ul id="rank-regras"></ul>
+        </details>
+      </section>
+      <div class="cats" id="rank-cats"></div>
+      <section class="panel chart" aria-labelledby="h-rank-ev">
+        <div class="panel-head"><div><h2 id="h-rank-ev">Pontos por semana</h2><p class="sub">Últimas 8 semanas, de segunda a domingo.</p></div></div>
+        <div class="legend" id="rank-legend"></div>
+        <div id="chart-rank"></div>
+      </section>
+    </section>
+
+    <!-- PAINEL -->
+    <section class="page" id="tab-painel" aria-label="Painel">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <section class="panel chart" aria-labelledby="h-const">
+          <div class="panel-head"><div><h2 id="h-const">Constância</h2><p class="sub">Treinos de musculação e corridas por semana, nas últimas 12 semanas.</p></div></div>
+          <div class="legend" aria-hidden="true"><span><i class="sq" style="background:var(--c-gym)"></i>Musculação</span><span><i class="sq" style="background:var(--c-run)"></i>Corrida</span><span><i class="dash"></i>Meta de musculação</span></div>
+          <div id="chart-const"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-hoje">
+          <div class="panel-head"><div><h2 id="h-hoje">Hoje</h2><p class="sub" id="hoje-sub"></p></div></div>
+          <div id="hoje-box"></div>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel chart" aria-labelledby="h-pesop">
+          <div class="panel-head"><div><h2 id="h-pesop">Peso</h2><p class="sub" id="pesop-sub">Cada pesagem registrada na aba Corpo.</p></div></div>
+          <div id="chart-peso-p"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-grupos">
+          <div class="panel-head"><div><h2 id="h-grupos">Grupos musculares</h2><p class="sub">Treinos por grupo nos últimos 90 dias e há quanto tempo cada um ficou parado.</p></div></div>
+          <div id="grupos-box"></div>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel chart" aria-labelledby="h-kcalp">
+          <div class="panel-head"><div><h2 id="h-kcalp">Calorias da semana</h2><p class="sub">Total de cada dia nos últimos 7 dias. A linha tracejada é a sua meta.</p></div></div>
+          <div id="chart-kcal-p"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-metas">
+          <div class="panel-head"><div><h2 id="h-metas">Metas</h2><p class="sub">Onde você está agora em relação ao que definiu.</p></div></div>
+          <div id="metas-box"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- TREINOS -->
+    <section class="page" id="tab-treinos" aria-label="Treinos" hidden>
+      <div class="grid2">
+        <section class="panel so-meu" aria-labelledby="h-tform">
+          <div class="panel-head"><div><h2 id="h-tform">O que você fez hoje</h2><p class="sub">Escolha o grupo: a ficha aparece com a última carga. Marque o que fez e ajuste a carga.</p></div></div>
+          <form class="form" id="f-treino" autocomplete="off">
+            <p class="note edit" id="t-edit" hidden></p>
+            <div class="row">
+              <label class="field"><span>Data</span><input type="date" id="t-data" required></label>
+              <label class="field"><span>Grupo</span><select id="t-grupo"></select></label>
+              <label class="field"><span>Duração (min)</span><input class="mono" id="t-dur" inputmode="numeric" placeholder="ex.: 60"></label>
+            </div>
+            <div class="ex-list" id="t-exs"></div>
+            <div class="btn-row"><button type="button" class="btn small" id="t-add">+ Adicionar exercício</button><span class="muted" id="t-count"></span></div>
+            <div class="rest" id="rest"><span class="label">Descanso</span><button type="button" class="btn small" data-rest="45">45 s</button><button type="button" class="btn small" data-rest="60">1 min</button><button type="button" class="btn small" data-rest="90">1:30</button><button type="button" class="btn small" data-rest="120">2 min</button><button type="button" class="btn small" data-rest="180">3 min</button></div>
+            <label class="field"><span>Como foi?</span><input id="t-obs" placeholder="ex.: subi a carga no supino, ombro incomodou"></label>
+            <div class="btn-row">
+              <button class="btn primary" type="submit" id="t-save">Salvar treino</button>
+              <button class="btn ghost" type="button" id="t-reset">Limpar</button>
+              <span class="muted" id="t-status" role="status"></span>
+            </div>
+            <p class="note" id="t-draft" hidden></p>
+          </form>
+        </section>
+        <section class="panel" aria-labelledby="h-cal">
+          <div class="cal-head">
+            <button class="btn small" type="button" id="cal-prev" aria-label="Mês anterior">‹</button>
+            <h2 id="h-cal">Mês</h2>
+            <button class="btn small" type="button" id="cal-next" aria-label="Próximo mês">›</button>
+          </div>
+          <div class="cal" id="cal"></div>
+          <div class="cal-legend" id="cal-legend" aria-hidden="true"></div>
+          <div id="dia-box" style="margin-top:14px"></div>
+        </section>
+      </div>
+      <section class="panel" aria-labelledby="h-fichas">
+        <div class="panel-head">
+          <div><h2 id="h-fichas">Fichas</h2><p class="sub">Vêm da sua página do Notion (só leitura) e dos exercícios adicionados aqui. Ao lado, a última carga registrada.</p></div>
+          <div class="seg" id="ficha-seg" role="group" aria-label="Grupo da ficha"></div>
+        </div>
+        <div id="ficha-box"></div>
+      </section>
+      <section class="panel" aria-labelledby="h-hist">
+        <div class="panel-head">
+          <div><h2 id="h-hist">Histórico</h2><p class="sub" id="hist-sub"></p></div>
+          <label class="field" style="min-width:150px"><span>Grupo</span><select id="hist-grupo"></select></label>
+        </div>
+        <div id="hist-box"></div>
+      </section>
+    </section>
+
+    <!-- CORRIDA -->
+    <section class="page" id="tab-corrida" aria-label="Corrida" hidden>
+      <div class="kpis" id="run-kpis"></div>
+      <div class="grid2">
+        <section class="panel chart" aria-labelledby="h-km">
+          <div class="panel-head"><div><h2 id="h-km">Quilômetros por semana</h2><p class="sub">Últimas 12 semanas, de segunda a domingo. A linha tracejada é a meta semanal.</p></div></div>
+          <div id="chart-km"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-strava">
+          <div class="panel-head"><div><h2 id="h-strava">Strava · Runna</h2><p class="sub">O Runna manda as corridas para o Strava, e o site puxa de lá. Só você vê as corridas do Strava (regra do Strava).</p></div></div>
+          <div id="strava-box"></div>
+        </section>
+      </div>
+      <div class="grid2">
+        <section class="panel" aria-labelledby="h-runs">
+          <div class="panel-head">
+            <div><h2 id="h-runs">Corridas</h2><p class="sub" id="runs-sub"></p></div>
+            <label class="field" style="min-width:150px"><span>Mês</span><select id="run-mes"></select></label>
+          </div>
+          <div id="run-list"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-frun">
+          <div class="panel-head"><div><h2 id="h-frun">Registrar corrida</h2><p class="sub">Corridas lançadas aqui contam no ranking do grupo.</p></div></div>
+          <form class="form" id="f-run" autocomplete="off">
+            <div class="row">
+              <label class="field"><span>Data</span><input type="date" id="r-data" required></label>
+              <label class="field"><span>Tipo</span><select id="r-tipo"><option>Leve</option><option>Intervalado</option><option>Tempo</option><option>Longão</option><option>Prova</option><option>Outro</option></select></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Distância (km)</span><input class="mono" id="r-km" inputmode="decimal" placeholder="5,0" required></label>
+              <label class="field"><span>Tempo</span><input class="mono" id="r-tempo" placeholder="30:00 ou 1:05:00" required></label>
+              <label class="field"><span>FC média (bpm)</span><input class="mono" id="r-fc" inputmode="numeric"></label>
+            </div>
+            <div class="calc-preview" id="r-preview"></div>
+            <label class="field"><span>Observação</span><input id="r-obs" placeholder="ex.: treino do Runna, calor forte"></label>
+            <div class="btn-row"><button class="btn primary" type="submit">Salvar corrida</button><span class="muted" id="r-status" role="status"></span></div>
+          </form>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel chart" aria-labelledby="h-pace">
+          <div class="panel-head"><div><h2 id="h-pace">Ritmo</h2><p class="sub">Pace das últimas 20 corridas, em min/km. Quanto mais baixo, mais rápido.</p></div></div>
+          <div id="chart-pace"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-recs">
+          <div class="panel-head"><div><h2 id="h-recs">Recordes</h2><p class="sub">Calculados a partir das corridas registradas.</p></div></div>
+          <div id="run-recs"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ALIMENTAÇÃO -->
+    <section class="page" id="tab-alimentacao" aria-label="Alimentação" hidden>
+      <section class="panel day-nav" aria-label="Dia">
+        <button class="btn small" type="button" id="fd-prev" aria-label="Dia anterior">‹</button>
+        <h2 id="fd-label">Hoje</h2>
+        <input type="date" id="fd-date" aria-label="Escolher dia">
+        <button class="btn small" type="button" id="fd-today">Hoje</button>
+        <button class="btn small" type="button" id="fd-next" aria-label="Próximo dia">›</button>
+      </section>
+      <div class="grid2">
+        <section class="panel" aria-labelledby="h-meals">
+          <div class="panel-head"><div><h2 id="h-meals">Refeições</h2><p class="sub" id="meals-sub"></p></div></div>
+          <div id="meals-box"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-macros">
+          <div class="panel-head"><div><h2 id="h-macros">Nutrição do dia</h2><p class="sub">Comparado às suas metas diárias.</p></div></div>
+          <div id="macros-box"></div>
+        </section>
+      </div>
+      <div class="grid2">
+        <section class="panel so-meu" aria-labelledby="h-ffood">
+          <div class="panel-head"><div><h2 id="h-ffood">Adicionar alimento</h2><p class="sub">Valores por porção. Toque num frequente para preencher.</p></div></div>
+          <form class="form" id="f-food" autocomplete="off">
+            <div class="row">
+              <label class="field"><span>Refeição</span><select id="a-ref"></select></label>
+              <label class="field" style="grid-column:span 2"><span>Alimento</span><input id="a-nome" list="dl-alimentos" placeholder="ex.: Frango grelhado" required></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Porção</span><input id="a-qtd" placeholder="ex.: 100 g"></label>
+              <label class="field"><span>Quantas porções</span><input class="mono" id="a-mult" inputmode="decimal" value="1"></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Calorias (kcal)</span><input class="mono" id="a-kcal" inputmode="decimal" required></label>
+              <label class="field"><span>Proteína (g)</span><input class="mono" id="a-prot" inputmode="decimal"></label>
+              <label class="field"><span>Carbo (g)</span><input class="mono" id="a-carb" inputmode="decimal"></label>
+              <label class="field"><span>Gordura (g)</span><input class="mono" id="a-gord" inputmode="decimal"></label>
+            </div>
+            <div class="calc-preview" id="a-preview"></div>
+            <label class="field" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="a-salvar" checked style="width:18px;height:18px;accent-color:var(--good)"><span style="font-weight:400">Guardar nos alimentos frequentes</span></label>
+            <div class="btn-row"><button class="btn primary" type="submit">Adicionar</button><span class="muted" id="a-status" role="status"></span></div>
+            <datalist id="dl-alimentos"></datalist>
+          </form>
+          <p class="label" style="margin:18px 0 8px">Frequentes</p>
+          <div class="freq" id="freq-box"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-growth" hidden><!-- leitura por IA desligada -->
+          <div class="panel-head"><div><h2 id="h-growth">Importar do Growth</h2><p class="sub">Mande um print do diário do app Growth, ou descreva o que comeu. A IA lê, e você confere antes de salvar.</p></div></div>
+          <div class="form" id="g-form">
+            <label class="field" id="g-file-wrap"><span>Print do Growth</span><input type="file" id="g-file" accept="image/*"></label>
+            <label class="field"><span>Ou descreva</span><textarea id="g-text" placeholder="ex.: almoço: 150 g de arroz, 1 concha de feijão, 120 g de frango grelhado e salada"></textarea></label>
+            <div class="btn-row"><button class="btn primary" type="button" id="g-go">Ler com IA</button><button class="btn ghost hidden" type="button" id="g-stop">Parar</button><span class="muted" id="g-status" role="status"></span></div>
+            <div id="g-result"></div>
+          </div>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel chart" aria-labelledby="h-food14">
+          <div class="panel-head"><div><h2 id="h-food14">Últimos 14 dias</h2><p class="sub">Calorias e proteína por dia. Linha tracejada: meta.</p></div></div>
+          <p class="label" style="margin:0 0 4px">Calorias</p>
+          <div id="chart-kcal"></div>
+          <p class="label" style="margin:14px 0 4px">Proteína</p>
+          <div id="chart-prot"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-fmetas">
+          <div class="panel-head"><div><h2 id="h-fmetas">Metas</h2><p class="sub" id="metas-sub">Metas diárias de nutrição e semanais de treino.</p></div></div>
+          <form class="form" id="f-metas" autocomplete="off">
+            <div class="row">
+              <label class="field"><span>Calorias (kcal)</span><input class="mono" id="m-kcal" inputmode="numeric"></label>
+              <label class="field"><span>Proteína (g)</span><input class="mono" id="m-prot" inputmode="numeric"></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Carbo (g)</span><input class="mono" id="m-carb" inputmode="numeric"></label>
+              <label class="field"><span>Gordura (g)</span><input class="mono" id="m-gord" inputmode="numeric"></label>
+              <label class="field"><span>Água (ml)</span><input class="mono" id="m-agua" inputmode="numeric"></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Treinos por semana</span><input class="mono" id="m-treinos" inputmode="numeric"></label>
+              <label class="field"><span>Km por semana</span><input class="mono" id="m-km" inputmode="decimal"></label>
+            </div>
+            <p class="note" id="m-note" hidden></p>
+            <div class="btn-row"><button class="btn primary" type="submit">Salvar metas</button><button class="btn" type="button" id="m-calc">Calcular pelo perfil</button><span class="muted" id="m-status" role="status"></span></div>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <!-- CORPO -->
+    <section class="page" id="tab-corpo" aria-label="Corpo" hidden>
+      <div class="kpis" id="body-kpis"></div>
+      <div class="grid2">
+        <section class="panel chart" aria-labelledby="h-peso">
+          <div class="panel-head"><div><h2 id="h-peso">Evolução do peso</h2><p class="sub" id="peso-sub"></p></div></div>
+          <div id="chart-peso"></div>
+          <div id="peso-list" style="margin-top:14px"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-fpeso">
+          <div class="panel-head"><div><h2 id="h-fpeso">Registrar peso</h2><p class="sub">De preferência de manhã, em jejum, sempre na mesma balança.</p></div></div>
+          <form class="form" id="f-peso" autocomplete="off">
+            <div class="row">
+              <label class="field"><span>Data</span><input type="date" id="p-data" required></label>
+              <label class="field"><span>Peso (kg)</span><input class="mono" id="p-peso" inputmode="decimal" placeholder="72,4" required></label>
+              <label class="field"><span>% de gordura</span><input class="mono" id="p-gord" inputmode="decimal" placeholder="opcional"></label>
+            </div>
+            <div class="btn-row"><button class="btn primary" type="submit">Salvar peso</button><span class="muted" id="p-status" role="status"></span></div>
+          </form>
+        </section>
+      </div>
+      <div class="grid2">
+        <section class="panel" aria-labelledby="h-med">
+          <div class="panel-head"><div><h2 id="h-med">Medidas corporais</h2><p class="sub">Primeira medição comparada com a mais recente, em centímetros.</p></div></div>
+          <div id="medidas-box"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-fmed">
+          <div class="panel-head"><div><h2 id="h-fmed">Registrar medidas</h2><p class="sub">Preencha só o que mediu. Fita no mesmo ponto, músculo relaxado.</p></div></div>
+          <form class="form" id="f-med" autocomplete="off">
+            <label class="field" style="max-width:200px"><span>Data</span><input type="date" id="md-data" required></label>
+            <div class="med-grid" id="md-fields"></div>
+            <div class="btn-row"><button class="btn primary" type="submit">Salvar medidas</button><span class="muted" id="md-status" role="status"></span></div>
+          </form>
+        </section>
+      </div>
+      <div class="grid2">
+        <section class="panel" aria-labelledby="h-desemp">
+          <div class="panel-head"><div><h2 id="h-desemp">Desempenho</h2><p class="sub">Seus recordes e testes, e as maiores cargas dos treinos registrados aqui.</p></div></div>
+          <div id="desemp-box"></div>
+        </section>
+        <section class="panel so-meu" aria-labelledby="h-fteste">
+          <div class="panel-head"><div><h2 id="h-fteste">Registrar recorde ou teste</h2><p class="sub">Carga máxima, flexões, prancha, tempo nos 5 km…</p></div></div>
+          <form class="form" id="f-teste" autocomplete="off">
+            <div class="row">
+              <label class="field"><span>Data</span><input type="date" id="x-data" required></label>
+              <label class="field" style="grid-column:span 2"><span>Exercício ou teste</span><input id="x-teste" list="dl-testes" placeholder="ex.: Supino reto" required></label>
+            </div>
+            <div class="row">
+              <label class="field"><span>Resultado</span><input class="mono" id="x-valor" placeholder="ex.: 40 ou 25:30" required></label>
+              <label class="field"><span>Unidade</span>
+                <select id="x-unid"><option value="kg">kg</option><option value="reps">repetições</option><option value="s">segundos (prancha…)</option><option value="tempo">tempo (menor é melhor)</option><option value="km">km</option><option value="cm">cm</option></select></label>
+              <label class="field" id="x-reps-wrap"><span>Repetições</span><input class="mono" id="x-reps" inputmode="numeric" placeholder="ex.: 8"></label>
+            </div>
+            <label class="field"><span>Observação</span><input id="x-obs"></label>
+            <div class="btn-row"><button class="btn primary" type="submit">Salvar</button><span class="muted" id="x-status" role="status"></span></div>
+            <datalist id="dl-testes"></datalist>
+          </form>
+        </section>
+      </div>
+      <section class="panel so-meu" aria-labelledby="h-perfil">
+        <div class="panel-head"><div><h2 id="h-perfil">Perfil</h2><p class="sub">Usado para o IMC e para sugerir metas de calorias e proteína.</p></div></div>
+        <form class="form" id="f-perfil" autocomplete="off">
+          <div class="row">
+            <label class="field"><span>Nome</span><input id="pf-nome"></label>
+            <label class="field"><span>Altura (cm)</span><input class="mono" id="pf-alt" inputmode="numeric"></label>
+            <label class="field"><span>Nascimento</span><input type="date" id="pf-nasc"></label>
+            <label class="field"><span>Sexo</span><select id="pf-sexo"><option value="">—</option><option value="m">Masculino</option><option value="f">Feminino</option></select></label>
+          </div>
+          <div class="row">
+            <label class="field"><span>Objetivo</span><select id="pf-obj"><option value="massa">Ganhar massa</option><option value="gordura">Perder gordura</option><option value="manter">Manter</option><option value="desempenho">Desempenho na corrida</option></select></label>
+            <label class="field"><span>Atividade no dia a dia</span><select id="pf-ativ"><option value="1.375">Leve (1–3 treinos/sem.)</option><option value="1.55">Moderada (3–5/sem.)</option><option value="1.725">Alta (6–7/sem.)</option><option value="1.2">Sedentária</option></select></label>
+            <label class="field"><span>Peso meta (kg)</span><input class="mono" id="pf-meta" inputmode="decimal"></label>
+          </div>
+          <div class="btn-row"><button class="btn primary" type="submit">Salvar perfil</button><span class="muted" id="pf-status" role="status"></span></div>
+        </form>
+      </section>
+    </section>
+
+    <!-- CONEXÕES -->
+    <section class="page" id="tab-conexoes" aria-label="Conexões" hidden>
+      <div class="grid2 even">
+        <section class="panel" aria-labelledby="h-cxc">
+          <div class="panel-head"><div><h2 id="h-cxc">Sua conta e o grupo</h2><p class="sub">Nome, cor no ranking e o que os amigos podem ver.</p></div></div>
+          <div id="cx-conta"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-cxi">
+          <div class="panel-head"><div><h2 id="h-cxi">Instalar no celular</h2><p class="sub">Abre como um aplicativo, em tela cheia, com ícone na tela inicial.</p></div></div>
+          <div id="cx-instalar"></div>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel" aria-labelledby="h-cxn">
+          <div class="panel-head"><div><h2 id="h-cxn">Notion</h2><p class="sub">Fichas de treino e Diário de treinos.</p></div></div>
+          <div id="cx-notion"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-cxs">
+          <div class="panel-head"><div><h2 id="h-cxs">Strava · Runna</h2><p class="sub">Corridas do Runna chegam pelo Strava.</p></div></div>
+          <div id="cx-strava"></div>
+        </section>
+      </div>
+      <div class="grid2 even">
+        <section class="panel" aria-labelledby="h-cxg" hidden><!-- leitura por IA desligada -->
+          <div class="panel-head"><div><h2 id="h-cxg">Growth · Dieta e Treino</h2><p class="sub">Diário alimentar.</p></div></div>
+          <div id="cx-growth"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-cxd">
+          <div class="panel-head"><div><h2 id="h-cxd">Seus dados</h2><p class="sub">Salvos na sua conta: aparecem em qualquer aparelho em que você entrar.</p></div></div>
+          <div id="cx-dados"></div>
+        </section>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<div class="rest-pill" id="rest-pill" hidden role="timer" aria-label="Descanso"><span>Descanso</span><b id="rest-time">0:00</b><button type="button" data-rest="+15">+15 s</button><button type="button" data-rest="stop">Parar</button></div>
+
+<div class="modal" id="g-modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="gm-title" tabindex="-1">
+    <h2 id="gm-title"></h2>
+    <div id="gm-body"></div>
+    <div class="btn-row"><button class="btn" type="button" id="gm-close">Fechar</button></div>
+  </div>
+</div>
+
+<div class="modal" id="t-confirm" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="tc-title" tabindex="-1">
+    <h2 id="tc-title">Tem certeza?</h2>
+    <p class="sub" id="tc-sub"></p>
+    <div id="tc-body"></div>
+    <div class="btn-row"><button class="btn primary" type="button" id="tc-ok">Salvar treino</button><button class="btn" type="button" id="tc-back">Voltar e editar</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="nucleo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
