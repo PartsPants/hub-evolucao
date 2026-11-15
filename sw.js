@@ -2,7 +2,7 @@
    Guarda o "esqueleto" do site no aparelho para abrir rápido e funcionar sem internet.
    Os dados NÃO passam por aqui: eles vão direto para o Supabase (ou para a fila offline do site).
    Ao publicar uma versão nova, mude o número abaixo. */
-const VERSAO = 'hub-v1';
+const VERSAO = 'hub-evolucao-v2';   /* só apaga caches que começam com "hub-evolucao" ou o antigo "hub-v1": o Hub de Vendas mora no mesmo endereço */
 const ESQUELETO = [
   './', './index.html', './app.js', './nucleo.js', './config.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
@@ -13,7 +13,7 @@ self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSAO).then(c => Promise.all(ESQUELETO.map(u => c.add(u).catch(() => null)))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSAO).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSAO && (k.startsWith('hub-evolucao') || k === 'hub-v1')).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
 /* rede primeiro (para pegar atualizações), cópia do aparelho se a rede falhar ou demorar */

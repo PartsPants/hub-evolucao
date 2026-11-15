@@ -3,7 +3,7 @@
   "short_name": "Evolução",
   "description": "Treino, corrida, dieta e corpo: acompanhe a sua evolução e compita com os amigos.",
   "lang": "pt-BR",
-  "id": "./",
+  "id": "/hub-evolucao/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
